@@ -3,7 +3,7 @@ Python Project 2021 for Principles of Programming Languages and Compiler Design 
 
 ## Project Description:
 
-Implementation of a python script to download data from Eurostat in order to extract data about tourism in Europe from 2016-2019 for the countries of Greece and Sweden.
+Implementation of a python script to download data from Eurostat in order to extract information about tourism in Europe from 2016-2019 for the countries of Greece and Sweden.
 
 The extracted data will be plotted in the following requested plots.
 
