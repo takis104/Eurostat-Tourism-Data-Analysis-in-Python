@@ -5,16 +5,25 @@
 # import python libraries
 import requests
 from openpyxl import load_workbook
+from matplotlib.ticker import FuncFormatter
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
+import mysql.connector
+import csv
 
 
 # Global Variables
-files_downloaded = 0
+files_count = 0
 Country_1 = "Greece"
 Country_2 = "Sweden"
 Years = [2016, 2017, 2018, 2019]
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="",
+  database="1054335_python_project_2021"
+)
 
 
 class Dataset:
@@ -23,6 +32,7 @@ class Dataset:
         self.second_country = country2
         self.data1 = []
         self.data2 = []
+        self.interval = years
 
 
 def download(files_downloaded_count):  # download data in .xlsx format from the WEB
@@ -105,9 +115,15 @@ def read_excel_data(file_name):  # Extract Useful Information from Excel Files
     return dataset
 
 
+def format_millions(x, pos):
+    return '%1.0fM' % (x * 1e-6)
+
+
 def plot(country1, country2, years, data1, data2, xlabel, ylabel, title):
     x_pos = np.arange(len(years))
     width = 0.25  # bar width
+
+    formatter = FuncFormatter(format_millions)
 
     fig, ax = plt.subplots()
     r1 = ax.bar(x_pos - width / 2, data1, width, label=country1, color='b')
@@ -117,20 +133,39 @@ def plot(country1, country2, years, data1, data2, xlabel, ylabel, title):
     ax.set_xlabel(xlabel)
     ax.set_title(title)
     ax.set_xticks(x_pos)
-    ax.set_yticks(np.arange(0, 100000000, 10000000))
+    ax.yaxis.set_major_formatter(formatter)
     ax.set_xticklabels(years)
     ax.legend()
 
     fig.tight_layout()
     plt.show()
 
+
 def main():
-    # download(files_downloaded)
+    print("Principles of Programing Languages and Compiler Design")
+    print("Python Project 2021")
+    print("Author: Christos-Panagiotis Mpalatsouras, SudentID = 1054335\n")
+    print("This script extracts information about tourism in Europe")
+    print("First Country of Interest: ", Country_1)
+    print("Second Country of Interest: ", Country_2)
+    print("Years of interest: ", Years)
+
+    print("Requested plots: ")
+    print("1. Nights spent at tourist accommodation establishments")
+    print("2. Nights spent by non-residents at tourist accommodation establishments")
+    print("3. Arrivals at tourist accommodation establishments")
+    print("4. Arrivals of non-residents at tourist accommodation establishments")
+
+    print("\nThis Script Will Download Required Data from Eurostat Website")
+    # download(files_count)
+
+    print("Extracting useful information from the downloaded files...")
     Nights_spent_residents = read_excel_data('nights_spent_by_residents.xlsx')
     Nights_spent_non_residents = read_excel_data('nights_spent_by_non_residents.xlsx')
     Arrivals_residents = read_excel_data('arrivals_by_residents.xlsx')
     Arrivals_non_residents = read_excel_data('arrivals_by_non_residents.xlsx')
 
+    print("Plotting the data...")
     plot(Nights_spent_residents.first_country, Nights_spent_residents.second_country, Years,
          Nights_spent_residents.data1, Nights_spent_residents.data2, "Year", "Million Nights Spent",
          "Nights spent at tourist accommodation establishments by residents")
@@ -143,6 +178,72 @@ def main():
     plot(Arrivals_non_residents.first_country, Arrivals_non_residents.second_country, Years,
          Arrivals_non_residents.data1, Arrivals_non_residents.data2, "Year", "Million Arrivals",
          "Arrivals of non-residents at tourist accommodation establishments")
+
+    mycursor = mydb.cursor()
+    id = 1
+    increment = 0
+    query = "INSERT INTO nights_spent (id, country, year, nights_spent) VALUES (%s, %s, %s, %s)"
+    for item in Nights_spent_residents.data1:
+        val = (id, Country_1, Nights_spent_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    for item in Nights_spent_residents.data2:
+        val = (id, Country_2, Nights_spent_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    id = 1
+    query = "INSERT INTO nights_spent_non_residents (id, country, year, nights_spent) VALUES (%s, %s, %s, %s)"
+    for item in Nights_spent_non_residents.data1:
+        val = (id, Country_1, Nights_spent_non_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    for item in Nights_spent_non_residents.data2:
+        val = (id, Country_2, Nights_spent_non_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    id = 1
+    query = "INSERT INTO arrivals (id, country, year, arrivals) VALUES (%s, %s, %s, %s)"
+    for item in Arrivals_residents.data1:
+        val = (id, Country_1, Arrivals_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    for item in Arrivals_residents.data2:
+        val = (id, Country_2, Arrivals_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    id = 1
+    query = "INSERT INTO arrivals_non_residents (id, country, year, arrivals) VALUES (%s, %s, %s, %s)"
+    for item in Arrivals_non_residents.data1:
+        val = (id, Country_1, Arrivals_non_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
+    increment = 0
+    for item in Arrivals_non_residents.data2:
+        val = (id, Country_2, Arrivals_non_residents.interval[increment], item)
+        mycursor.execute(query, val)
+        mydb.commit()
+        increment += 1
+        id += 1
 
 
 main()
