@@ -37,10 +37,10 @@ class Dataset:
 
 def download(files_downloaded_count):  # download data in .xlsx format from the WEB
     # URLs
-    url_nights_spent_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/cbe1232e-1456-4561-8e1d-8f15188c9a57"
-    url_nights_spent_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/e0bb6a45-b0bc-4537-9175-611c32cfc97b"
-    url_arrivals_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/af97e98f-35dc-45aa-bfe6-e70ae267cd1e"
-    url_arrivals_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/67cc5b33-2c00-4767-bbd8-74224b7b78e5"
+    url_nights_spent_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/24190e8b-f8c7-404c-960f-2c24fb85ca8c"
+    url_nights_spent_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/1fdc52f3-abc1-413b-b1c9-3e8f93ab133a"
+    url_arrivals_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/343a8149-aae7-46b5-b0d2-7e145484b060"
+    url_arrivals_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/7ff88378-1f46-4644-82fd-09a35058e7df"
 
     # Download process
     print("Downloading: Nights spent at tourist accommodation establishments by residents, from URL: ", url_nights_spent_residents)
@@ -157,7 +157,7 @@ def main():
     print("4. Arrivals of non-residents at tourist accommodation establishments")
 
     print("\nThis Script Will Download Required Data from Eurostat Website")
-    # download(files_count)
+    download(files_count)
 
     print("Extracting useful information from the downloaded files...")
     Nights_spent_residents = read_excel_data('nights_spent_by_residents.xlsx')
@@ -165,6 +165,7 @@ def main():
     Arrivals_residents = read_excel_data('arrivals_by_residents.xlsx')
     Arrivals_non_residents = read_excel_data('arrivals_by_non_residents.xlsx')
 
+    # Plotting the data
     print("Plotting the data...")
     plot(Nights_spent_residents.first_country, Nights_spent_residents.second_country, Years,
          Nights_spent_residents.data1, Nights_spent_residents.data2, "Year", "Million Nights Spent",
@@ -179,9 +180,11 @@ def main():
          Arrivals_non_residents.data1, Arrivals_non_residents.data2, "Year", "Million Arrivals",
          "Arrivals of non-residents at tourist accommodation establishments")
 
+    # Writing data to Database
     mycursor = mydb.cursor()
     id = 1
     increment = 0
+    print("Writing to database: Nights spent by residents")
     query = "INSERT INTO nights_spent (id, country, year, nights_spent) VALUES (%s, %s, %s, %s)"
     for item in Nights_spent_residents.data1:
         val = (id, Country_1, Nights_spent_residents.interval[increment], item)
@@ -198,6 +201,7 @@ def main():
         id += 1
     increment = 0
     id = 1
+    print("Writing to database: Nights spent by non residents")
     query = "INSERT INTO nights_spent_non_residents (id, country, year, nights_spent) VALUES (%s, %s, %s, %s)"
     for item in Nights_spent_non_residents.data1:
         val = (id, Country_1, Nights_spent_non_residents.interval[increment], item)
@@ -214,6 +218,7 @@ def main():
         id += 1
     increment = 0
     id = 1
+    print("Writing to database: Arrivals by residents")
     query = "INSERT INTO arrivals (id, country, year, arrivals) VALUES (%s, %s, %s, %s)"
     for item in Arrivals_residents.data1:
         val = (id, Country_1, Arrivals_residents.interval[increment], item)
@@ -230,6 +235,7 @@ def main():
         id += 1
     increment = 0
     id = 1
+    print("Writing to database: Arrivals by non residents")
     query = "INSERT INTO arrivals_non_residents (id, country, year, arrivals) VALUES (%s, %s, %s, %s)"
     for item in Arrivals_non_residents.data1:
         val = (id, Country_1, Arrivals_non_residents.interval[increment], item)
@@ -244,6 +250,59 @@ def main():
         mydb.commit()
         increment += 1
         id += 1
+
+    # Write CSV Files
+    with open('nights_spent_residents_file.csv', mode='w', newline='') as nights_spent_residents_file:
+        print("Extracting Nights Spent by Residents in CSV...")
+        nights_spent_residents_writer = csv.writer(nights_spent_residents_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        index = 0
+        nights_spent_residents_writer.writerow(['Country', 'Year', 'Nights_spent'])
+        for item in Nights_spent_residents.data1:
+            nights_spent_residents_writer.writerow([Country_1, Nights_spent_residents.interval[index], item])
+            index += 1
+        index = 0
+        for item in Nights_spent_residents.data2:
+            nights_spent_residents_writer.writerow([Country_2, Nights_spent_residents.interval[index], item])
+            index += 1
+
+    with open('nights_spent_non_residents_file.csv', mode='w', newline='') as nights_spent_non_residents_file:
+        print("Extracting Nights Spent by Non Residents in CSV...")
+        nights_spent_non_residents_writer = csv.writer(nights_spent_non_residents_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        index = 0
+        nights_spent_non_residents_writer.writerow(['Country', 'Year', 'Nights_spent'])
+        for item in Nights_spent_non_residents.data1:
+            nights_spent_non_residents_writer.writerow([Country_1, Nights_spent_non_residents.interval[index], item])
+            index += 1
+        index = 0
+        for item in Nights_spent_non_residents.data2:
+            nights_spent_non_residents_writer.writerow([Country_2, Nights_spent_non_residents.interval[index], item])
+            index += 1
+
+    with open('arrivals_residents_file.csv', mode='w', newline='') as arrivals_residents_file:
+        print("Extracting Arrivals by Residents in CSV...")
+        arrivals_residents_writer = csv.writer(arrivals_residents_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        index = 0
+        arrivals_residents_writer.writerow(['Country', 'Year', 'Arrivals'])
+        for item in Arrivals_residents.data1:
+            arrivals_residents_writer.writerow([Country_1, Arrivals_residents.interval[index], item])
+            index += 1
+        index = 0
+        for item in Arrivals_residents.data2:
+            arrivals_residents_writer.writerow([Country_2, Arrivals_residents.interval[index], item])
+            index += 1
+
+    with open('arrivals_non_residents_file.csv', mode='w', newline='') as arrivals_non_residents_file:
+        print("Extracting Arrivals by Non Residents in CSV...")
+        arrivals_non_residents_writer = csv.writer(arrivals_non_residents_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        index = 0
+        arrivals_non_residents_writer.writerow(['Country', 'Year', 'Arrivals'])
+        for item in Arrivals_non_residents.data1:
+            arrivals_non_residents_writer.writerow([Country_1, Arrivals_non_residents.interval[index], item])
+            index += 1
+        index = 0
+        for item in Arrivals_non_residents.data2:
+            arrivals_non_residents_writer.writerow([Country_2, Arrivals_non_residents.interval[index], item])
+            index += 1
 
 
 main()
