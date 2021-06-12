@@ -115,7 +115,7 @@ def read_excel_data(file_name):  # Extract Useful Information from Excel Files
     return dataset
 
 
-def format_millions(x, pos):
+def format_millions(x, pos):  # Function for the formatting of the numbers in the plot
     return '%1.0fM' % (x * 1e-6)
 
 
@@ -264,6 +264,7 @@ def main():
         for item in Nights_spent_residents.data2:
             nights_spent_residents_writer.writerow([Country_2, Nights_spent_residents.interval[index], item])
             index += 1
+    nights_spent_residents_file.close()
 
     with open('nights_spent_non_residents_file.csv', mode='w', newline='') as nights_spent_non_residents_file:
         print("Extracting Nights Spent by Non Residents in CSV...")
@@ -277,6 +278,7 @@ def main():
         for item in Nights_spent_non_residents.data2:
             nights_spent_non_residents_writer.writerow([Country_2, Nights_spent_non_residents.interval[index], item])
             index += 1
+    nights_spent_non_residents_file.close()
 
     with open('arrivals_residents_file.csv', mode='w', newline='') as arrivals_residents_file:
         print("Extracting Arrivals by Residents in CSV...")
@@ -290,6 +292,7 @@ def main():
         for item in Arrivals_residents.data2:
             arrivals_residents_writer.writerow([Country_2, Arrivals_residents.interval[index], item])
             index += 1
+    arrivals_residents_file.close()
 
     with open('arrivals_non_residents_file.csv', mode='w', newline='') as arrivals_non_residents_file:
         print("Extracting Arrivals by Non Residents in CSV...")
@@ -303,6 +306,7 @@ def main():
         for item in Arrivals_non_residents.data2:
             arrivals_non_residents_writer.writerow([Country_2, Arrivals_non_residents.interval[index], item])
             index += 1
+    arrivals_non_residents_file.close()
 
 
 main()
