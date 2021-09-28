@@ -37,13 +37,13 @@ class Dataset:
 
 def download(files_downloaded_count):  # download data in .xlsx format from the WEB
     # URLs
+    # Download links are valid only for a short time interval. They must be refreshed for the download process to be working correctly.
     url_nights_spent_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/24190e8b-f8c7-404c-960f-2c24fb85ca8c"
     url_nights_spent_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/1fdc52f3-abc1-413b-b1c9-3e8f93ab133a"
     url_arrivals_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/343a8149-aae7-46b5-b0d2-7e145484b060"
     url_arrivals_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/7ff88378-1f46-4644-82fd-09a35058e7df"
 
     # Download process
-    # Download links are valid only for a short time interval. They must be refreshed for the correct execution of download process.
     print("Downloading: Nights spent at tourist accommodation establishments by residents, from URL: ", url_nights_spent_residents)
     req_nights_spent_residents = requests.get(url_nights_spent_residents, allow_redirects=True)
     open('nights_spent_by_residents.xlsx', 'wb').write(req_nights_spent_residents.content)
