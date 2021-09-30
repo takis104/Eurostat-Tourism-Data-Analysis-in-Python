@@ -22,7 +22,7 @@ mydb = mysql.connector.connect(
   host="localhost",
   user="root",
   password="",
-  database="1054335_python_project_2021"
+  database="python_project_2021"
 )
 
 
