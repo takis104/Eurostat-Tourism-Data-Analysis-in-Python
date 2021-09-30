@@ -37,6 +37,7 @@ class Dataset:
 
 def download(files_downloaded_count):  # download data in .xlsx format from the WEB
     # URLs
+    # Download links are valid only for a short time interval. They must be refreshed for the download process to be working correctly.
     url_nights_spent_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/24190e8b-f8c7-404c-960f-2c24fb85ca8c"
     url_nights_spent_non_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/1fdc52f3-abc1-413b-b1c9-3e8f93ab133a"
     url_arrivals_residents = "https://ec.europa.eu/eurostat/databrowser-backend/api/query/1.0/LIVE/xlsx/en/download/343a8149-aae7-46b5-b0d2-7e145484b060"
