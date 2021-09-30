@@ -23,7 +23,7 @@ Requested plots:
 ## Project Implementation
 A short description about the implementation of this project
 
-### Data download from the Internet
+### Data downloading from the Internet
 All the requested data are downloaded in Microsoft Excel format from the above links, with the requests module in Python.
 Download links are valid only for a short time interval. They must be refreshed for the download process to be working correctly.
 
