@@ -22,6 +22,7 @@ Requested plots:
 
 ## Project Implementation
 A short description about the implementation of this project.
+
 Project Main Application code file in Python: Implementation/main.py (https://github.com/takis104/Eurostat-Tourism-Data-Analysis-in-Python/blob/main/Implementation/main.py)
 
 ### Data downloading from the Internet
