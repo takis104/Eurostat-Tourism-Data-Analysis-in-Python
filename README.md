@@ -21,7 +21,8 @@ Requested plots:
 4. Arrivals of non-residents at tourist accommodation establishments (Data Source: https://ec.europa.eu/eurostat/databrowser/bookmark/a2079f11-e948-4318-b543-bd1f630524ed?lang=en)
 
 ## Project Implementation
-A short description about the implementation of this project
+A short description about the implementation of this project.
+Project Main Application code file in Python: Implementation/main.py (https://github.com/takis104/Eurostat-Tourism-Data-Analysis-in-Python/blob/main/Implementation/main.py)
 
 ### Data downloading from the Internet
 All the requested data are downloaded in Microsoft Excel format from the above links, with the requests module in Python.
