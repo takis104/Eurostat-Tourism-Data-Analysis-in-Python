@@ -1,5 +1,5 @@
 #  Eurostat-Tourism-Data-Analysis-in-Python
-[comment]: <> ("Python Project 2021" for Undergraduate course of Principles of Programming Languages and Compiler Design - CEID_NY132, University of Patras)
+Python Project 2021 for Undergraduate course of Principles of Programming Languages and Compiler Design, University of Patras
 
 Project created on June 2021.
 
