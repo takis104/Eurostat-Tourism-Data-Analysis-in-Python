@@ -1,4 +1,4 @@
-#  Eurostat-Tourism-Data-Analysis-in-Python
+#  Eurostat Tourism Data Analysis in Python
 Python Project 2021 for Undergraduate course of Principles of Programming Languages and Compiler Design, University of Patras
 
 Project created on June 2021.
